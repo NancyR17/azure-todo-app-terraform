@@ -18,11 +18,8 @@ vnets_subnets = {
       frontend-subnet-naina = {
         address_prefix = "192.168.16.0/22"
       }
-      backend-subnet-1-naina = {
+      backend-subnet-naina = {
         address_prefix = "192.168.32.0/22"
-      }
-      backend-subnet-2-naina = {
-        address_prefix = "192.168.48.0/22"
       }
       AzureBastionSubnet = {
       address_prefix = "192.168.64.0/22"
