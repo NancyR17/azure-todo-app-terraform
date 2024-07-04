@@ -9,7 +9,7 @@ vnets_subnets = {
     location            = "East US 2"
     resource_group_name = "naina-rg1"
     address_space       = ["192.168.0.0/16"]
-    The AzureBastionSubnet Block is required in subnets if enable_bastion=true 
+    # The AzureBastionSubnet Block is required in subnets if enable_bastion=true 
     AzureBastionSubnet = {
         address_prefix = "192.168.64.0/22"
    }
