@@ -1,42 +1,45 @@
 rgs = {
-  rg-devopsinsiders = {
-    location = "West Europe"
+  naina-rg1 = {
+    location = "East US 2"
   }
 }
 
 vnets_subnets = {
-  vnet-devopsinsiders = {
-    location            = "West Europe"
-    resource_group_name = "rg-devopsinsiders"
-    address_space       = ["10.0.0.0/16"]
-    # The AzureBastionSubnet Block is required in subnets if enable_bastion=true 
-    # AzureBastionSubnet = {
-    #     address_prefix = "10.0.2.0/24"
-    # }
-    enable_bastion = false
+  vnet-naina = {
+    location            = "East US 2"
+    resource_group_name = "naina-rg1"
+    address_space       = ["192.168.0.0/16"]
+    The AzureBastionSubnet Block is required in subnets if enable_bastion=true 
+    AzureBastionSubnet = {
+        address_prefix = "192.168.64.0/22"
+   }
+    enable_bastion = true
     subnets = {
-      frontend-subnet = {
-        address_prefix = "10.0.0.0/24"
+      frontend-subnet-naina = {
+        address_prefix = "192.168.16.0/22"
       }
-      backend-subnet = {
-        address_prefix = "10.0.1.0/24"
+      backend-subnet-1-naina = {
+        address_prefix = "192.168.32.0/22"
       }
-      # AzureBastionSubnet = {
-      #   address_prefix = "10.0.2.0/24"
-      # }
+      backend-subnet-2-naina = {
+        address_prefix = "192.168.48.0/22"
+      }
+      AzureBastionSubnet = {
+      address_prefix = "192.168.64.0/22"
+      }
     }
   }
 }
 
 vms = {
-  "frontendvm" = {
-    resource_group_name = "rg-devopsinsiders"
-    location            = "West Europe"
-    vnet_name           = "vnet-devopsinsiders"
-    subnet_name         = "frontend-subnet"
+  "frontend-vm-1-naina" = {
+    resource_group_name = "naina-rg1"
+    location            = "East US 2"
+    vnet_name           = "vnet-naina"
+    subnet_name         = "frontend-subnet-naina"
     size                = "Standard_DS1_v2"
-    admin_username      = "devopsadmin"
-    admin_password      = "P@ssw01rd@123"
+    admin_username      = "devopsnaina"
+    admin_password      = "Test@9876543"
     userdata_script     = "install_nginx.sh"
     inbound_open_ports  = [22, 80]
     source_image_reference = {
@@ -47,14 +50,52 @@ vms = {
     }
     enable_public_ip = true
   }
-  "backendvm" = {
-    resource_group_name = "rg-devopsinsiders"
-    location            = "West Europe"
-    vnet_name           = "vnet-devopsinsiders"
-    subnet_name         = "backend-subnet"
+"frontend-vm-2-naina" = {
+    resource_group_name = "naina-rg1"
+    location            = "East US 2"
+    vnet_name           = "vnet-naina"
+    subnet_name         = "frontend-subnet-naina"
     size                = "Standard_DS1_v2"
-    admin_username      = "devopsadmin"
-    admin_password      = "P@ssw01rd@123"
+    admin_username      = "devopsnaina"
+    admin_password      = "Test@9876543"
+    userdata_script     = "install_nginx.sh"
+    inbound_open_ports  = [22, 80]
+    source_image_reference = {
+      publisher = "Canonical"
+      offer     = "0001-com-ubuntu-server-focal"
+      sku       = "20_04-lts"
+      version   = "latest"
+    }
+    enable_public_ip = true
+  }
+  "backend-vm-1-naina" = {
+    resource_group_name = "naina-rg1"
+    location            = "East US 2"
+    vnet_name           = "vnet-naina"
+    subnet_name         = "backend-subnet-naina"
+    size                = "Standard_DS1_v2"
+    admin_username      = "devopsnaina"
+    admin_password      = "Test@9876543"
+    userdata_script     = "install_python.sh"
+    inbound_open_ports  = [22, 8000]
+    source_image_reference = {
+      publisher = "Canonical"
+      offer     = "0001-com-ubuntu-server-focal"
+      sku       = "20_04-lts"
+      version   = "latest"
+    }
+    enable_public_ip = false
+  }
+}
+
+  "backend-vm-2-naina" = {
+    resource_group_name = "naina-rg1"
+    location            = "East US 2"
+    vnet_name           = "vnet-naina"
+    subnet_name         = "backend-subnet-naina"
+    size                = "Standard_DS1_v2"
+    admin_username      = "devopsnaina"
+    admin_password      = "Test@9876543"
     userdata_script     = "install_python.sh"
     inbound_open_ports  = [22, 8000]
     source_image_reference = {
@@ -68,9 +109,9 @@ vms = {
 }
 
 loadbalancers = {
-  lb-devopsinsiders = {
-    location                       = "West Europe"
-    resource_group_name            = "rg-devopsinsiders"
+  lb-naina = {
+    location                       = "East US 2"
+    resource_group_name            = "naina-rg1"
     frontend_ip_configuration_name = "PublicIPAddress"
     sku                            = "Standard"
   }
@@ -79,18 +120,18 @@ loadbalancers = {
 backend_pools = {
   frontend-pool = {
     port        = 80
-    lb_name     = "lb-devopsinsiders"
-    backend_vms = ["frontendvm1", "frontendvm2"]
+    lb_name     = "lb-naina"
+    backend_vms = ["frontend-vm-1-naina", "frontend-vm-2-naina"]
   }
 }
 
 servers_dbs = {
-  "devopsinssrv1" = {
-    resource_group_name            = "rg-devopsinsiders"
-    location                       = "West Europe"
+  "nainadbs" = {
+    resource_group_name            = "naina-rg1"
+    location                       = "East US 2"
     version                        = "12.0"
-    administrator_login            = "devopsadmin"
-    administrator_login_password   = "P@ssw01rd@123"
+    administrator_login            = "devopsserver"
+    administrator_login_password   = "Test@9876543"
     allow_access_to_azure_services = true
     dbs                            = ["todoappdb"]
   }
