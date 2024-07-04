@@ -83,8 +83,6 @@ vms = {
     }
     enable_public_ip = false
   }
-}
-
   "backend-vm-2-naina" = {
     resource_group_name = "naina-rg1"
     location            = "East US 2"
@@ -103,6 +101,7 @@ vms = {
     }
     enable_public_ip = false
   }
+}
 }
 
 loadbalancers = {
